@@ -6,7 +6,7 @@ import os
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "thisisasecretkey")
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='polling')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
 
 rooms = {}
 
@@ -102,4 +102,6 @@ def disconnect():
 
 # For local development
 if __name__ == "__main__":
-    socketio.run(app, debug=True)
+    # ใช้พอร์ตที่ Render กำหนดหรือใช้พอร์ต 5000 เป็นค่าเริ่มต้น
+    port = int(os.environ.get("PORT", 5000))
+    socketio.run(app, host='0.0.0.0', port=port)
