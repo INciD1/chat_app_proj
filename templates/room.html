@@ -17,7 +17,7 @@
 </div>
 <script type="text/javascript">
   var socketio = io({
-    transports: ['websocket']
+  transports: ['polling', 'websocket']
   });
 
   const messages = document.getElementById("messages");
