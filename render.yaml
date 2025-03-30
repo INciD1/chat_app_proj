@@ -6,7 +6,7 @@ services:
       pip install --upgrade pip
       pip install wheel
       pip install -r requirements.txt
-    startCommand: gunicorn -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 main:app
+    startCommand: gunicorn --log-level debug -k geventwebsocket.gunicorn.workers.GeventWebSocketWorker -w 1 main:app
     envVars:
       - key: SECRET_KEY
         generateValue: true
