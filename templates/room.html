@@ -2,6 +2,26 @@
 <div class="message-box">
   <div class="room-header">
     <h2><i class="fas fa-comments"></i> ห้องแชท <span class="room-code">{{code}}</span></h2>
+    <button type="button" id="change-name-btn" class="change-name-btn">
+      <i class="fas fa-user-edit"></i> เปลี่ยนชื่อ
+    </button>
+    
+    <!-- แบบฟอร์มเปลี่ยนชื่อ (ซ่อนไว้เริ่มต้น) -->
+    <div id="change-name-modal" class="change-name-modal">
+      <div class="change-name-content">
+        <h3>เปลี่ยนชื่อของคุณ</h3>
+        <form action="/change_name" method="post">
+          <div class="input-group">
+            <label for="new_name">ชื่อใหม่:</label>
+            <input type="text" id="new_name" name="new_name" value="{{ session.get('name') }}" required>
+          </div>
+          <div class="change-name-buttons">
+            <button type="button" id="cancel-change-name" class="cancel-btn">ยกเลิก</button>
+            <button type="submit" class="confirm-btn">บันทึก</button>
+          </div>
+        </form>
+      </div>
+    </div>
   </div>
   <div class="messages" id="messages"></div>
   <div class="inputs">
@@ -207,7 +227,7 @@
 
   socketio.on("message", (data) => {
     // Check if this is a system message (has entered/left the room)
-    const isSystemMessage = data.message === "has entered the room" || data.message === "has left the room";
+    const isSystemMessage = data.message === "has entered the room" || data.message === "has left the room" || data.message.includes("เปลี่ยนชื่อเป็น");
     
     // Check if this is a GIF message
     const isGif = data.message && data.message.startsWith("[gif:") && data.message.endsWith("]");
@@ -260,6 +280,24 @@
       }
     });
 
+    // เพิ่ม event listener สำหรับปุ่มเปลี่ยนชื่อ
+    document.getElementById("change-name-btn").addEventListener("click", function() {
+      document.getElementById("change-name-modal").style.display = "flex";
+    });
+
+    // ปุ่มยกเลิกการเปลี่ยนชื่อ
+    document.getElementById("cancel-change-name").addEventListener("click", function() {
+      document.getElementById("change-name-modal").style.display = "none";
+    });
+
+    // ปิดฟอร์มเมื่อคลิกนอกกรอบ
+    window.addEventListener("click", function(event) {
+      const modal = document.getElementById("change-name-modal");
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    });
+
     // Focus on message input when page loads
     document.getElementById("message").focus();
   });
@@ -268,7 +306,9 @@
 {% for msg in messages %}
 <script type="text/javascript">
   // Check if this is a system message
-  const isSystemMsg = "{{msg.message}}" === "has entered the room" || "{{msg.message}}" === "has left the room";
+  const isSystemMsg = "{{msg.message}}" === "has entered the room" || 
+                      "{{msg.message}}" === "has left the room" || 
+                      "{{msg.message}}".includes("เปลี่ยนชื่อเป็น");
   
   // Check if this is a GIF message
   const isGifMsg = "{{msg.message}}".startsWith("[gif:") && "{{msg.message}}".endsWith("]");

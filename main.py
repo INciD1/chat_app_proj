@@ -57,6 +57,29 @@ def room():
 
     return render_template("room.html", code=room, messages=rooms[room]["messages"])
 
+@app.route("/change_name", methods=["POST"])
+def change_name():
+    room = session.get("room")
+    old_name = session.get("name")
+    new_name = request.form.get("new_name")
+    
+    if not room or not old_name or not new_name or room not in rooms:
+        return redirect(url_for("home"))
+    
+    # อัปเดตชื่อในเซสชัน
+    session["name"] = new_name
+    
+    # ส่งข้อความแจ้งเตือนการเปลี่ยนชื่อ
+    system_message = {
+        "name": "ระบบ",
+        "message": f"{old_name} เปลี่ยนชื่อเป็น {new_name}"
+    }
+    
+    send(system_message, to=room)
+    rooms[room]["messages"].append(system_message)
+    
+    return redirect(url_for("room"))
+
 @socketio.on("message")
 def message(data):
     room = session.get("room")
