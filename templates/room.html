@@ -5,6 +5,21 @@
   </div>
   <div class="messages" id="messages"></div>
   <div class="inputs">
+    <div class="message-tools">
+      <button type="button" id="emoji-btn" class="tool-btn"><i class="far fa-smile"></i></button>
+      <button type="button" id="gif-btn" class="tool-btn"><i class="fas fa-image"></i></button>
+      <div id="emoji-picker" class="emoji-picker">
+        <!-- Emoji จะถูกเพิ่มด้วย JavaScript -->
+      </div>
+      <div id="gif-picker" class="gif-picker">
+        <div class="gif-search">
+          <input type="text" id="gif-search" placeholder="ค้นหา GIF...">
+        </div>
+        <div id="gif-results" class="gif-results">
+          <!-- ผลลัพธ์ GIF จะแสดงที่นี่ -->
+        </div>
+      </div>
+    </div>
     <input
       type="text"
       placeholder="พิมพ์ข้อความของคุณที่นี่..."
@@ -25,38 +40,178 @@
 
   const messages = document.getElementById("messages");
   const currentUser = "{{ session.get('name') }}";
+  const GIPHY_API_KEY = "YOUR_GIPHY_API_KEY"; // ควรเก็บไว้ใน environment variable แต่สำหรับตัวอย่างเราใส่ตรงๆ
 
-  const createMessage = (name, msg, isSystem = false) => {
-  if (isSystem) {
-    const content = `
-    <div class="system-message">
-      <span>${name} ${msg}</span>
-    </div>
-    `;
-    messages.innerHTML += content;
-  } else {
-    const isCurrentUser = name === currentUser;
-    const content = `
-    <div class="text ${isCurrentUser ? 'sent' : ''}">
-      <div class="message-content">
-        <strong>${isCurrentUser ? 'คุณ' : name}:</strong> ${msg}
+  // Common emojis array
+  const commonEmojis = [
+    "😀", "😁", "😂", "🤣", "😃", "😄", "😅", "😆", "😉", "😊", 
+    "😋", "😎", "😍", "😘", "🥰", "😗", "😙", "😚", "🙂", "🤗",
+    "🤩", "🤔", "🤨", "😐", "😑", "😶", "🙄", "😏", "😣", "😥",
+    "😮", "🤐", "😯", "😪", "😫", "😴", "😌", "😛", "😜", "😝",
+    "🤤", "😒", "😓", "😔", "😕", "🙃", "🤑", "😲", "☹️", "🙁",
+    "😖", "😞", "😟", "😤", "😢", "😭", "😦", "😧", "😨", "😩",
+    "🤯", "😬", "😰", "😱", "🥵", "🥶", "😳", "🤪", "😵", "😡",
+    "😠", "🤬", "😷", "🤒", "🤕", "🤢", "🤮", "🤧", "😇", "🥳",
+    "🥴", "🥺", "🤠", "🤡", "🤥", "🤫", "🤭", "🧐", "🤓", "😈",
+    "👋", "👌", "👍", "👎", "❤️", "🔥", "✨", "🎉", "👏", "🙏"
+  ];
+
+  // Populate emoji picker
+  const populateEmojiPicker = () => {
+    const emojiPicker = document.getElementById("emoji-picker");
+    emojiPicker.innerHTML = ""; // Clear existing emojis
+    
+    commonEmojis.forEach(emoji => {
+      const emojiSpan = document.createElement("span");
+      emojiSpan.textContent = emoji;
+      emojiSpan.className = "emoji";
+      emojiSpan.addEventListener("click", () => {
+        const messageInput = document.getElementById("message");
+        messageInput.value += emoji;
+        messageInput.focus();
+        toggleEmojiPicker(false);
+      });
+      
+      emojiPicker.appendChild(emojiSpan);
+    });
+  };
+
+  // Toggle emoji picker
+  const toggleEmojiPicker = (show = undefined) => {
+    const emojiPicker = document.getElementById("emoji-picker");
+    const gifPicker = document.getElementById("gif-picker");
+    
+    if (show === undefined) {
+      emojiPicker.classList.toggle("show");
+    } else {
+      emojiPicker.classList.toggle("show", show);
+    }
+    
+    // Always hide GIF picker when toggling emoji picker
+    gifPicker.classList.remove("show");
+  };
+
+  // Toggle GIF picker
+  const toggleGifPicker = (show = undefined) => {
+    const gifPicker = document.getElementById("gif-picker");
+    const emojiPicker = document.getElementById("emoji-picker");
+    
+    if (show === undefined) {
+      gifPicker.classList.toggle("show");
+    } else {
+      gifPicker.classList.toggle("show", show);
+    }
+    
+    // Always hide emoji picker when toggling GIF picker
+    emojiPicker.classList.remove("show");
+    
+    // Focus on search input when showing GIF picker
+    if (gifPicker.classList.contains("show")) {
+      document.getElementById("gif-search").focus();
+    }
+  };
+
+  // Search for GIFs
+  const searchGifs = (query) => {
+    const resultsDiv = document.getElementById("gif-results");
+    resultsDiv.innerHTML = '<div class="gif-loading">กำลังค้นหา...</div>';
+    
+    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
+      .then(response => response.json())
+      .then(data => {
+        resultsDiv.innerHTML = '';
+        
+        if (data.data.length === 0) {
+          resultsDiv.innerHTML = '<div class="gif-no-results">ไม่พบ GIF ที่ตรงกับการค้นหา</div>';
+          return;
+        }
+        
+        data.data.forEach(gif => {
+          const gifItem = document.createElement("div");
+          gifItem.className = "gif-item";
+          
+          const img = document.createElement("img");
+          img.src = gif.images.fixed_height_small.url;
+          img.alt = gif.title;
+          
+          img.addEventListener("click", () => {
+            sendGif(gif.images.fixed_height.url, gif.title);
+            toggleGifPicker(false);
+          });
+          
+          gifItem.appendChild(img);
+          resultsDiv.appendChild(gifItem);
+        });
+      })
+      .catch(error => {
+        console.error("Error fetching GIFs:", error);
+        resultsDiv.innerHTML = '<div class="gif-error">เกิดข้อผิดพลาดในการค้นหา GIF</div>';
+      });
+  };
+
+  // Send GIF message
+  const sendGif = (url, title) => {
+    socketio.emit("message", { 
+      data: `[gif:${url}]`, 
+      isGif: true, 
+      gifTitle: title 
+    });
+  };
+
+  const createMessage = (name, msg, isSystem = false, isGif = false, gifTitle = "") => {
+    if (isSystem) {
+      const content = `
+      <div class="system-message">
+        <span>${name} ${msg}</span>
       </div>
-      <span class="muted">
-        ${new Date().toLocaleString()}
-      </span>
-    </div>
-    `;
-    messages.innerHTML += content;
-  }
-  
-  // Auto scroll to bottom
-  messages.scrollTop = messages.scrollHeight;
-};
+      `;
+      messages.innerHTML += content;
+    } else if (isGif) {
+      // Extract the GIF URL from message format [gif:URL]
+      const gifUrl = msg.substring(5, msg.length - 1);
+      const isCurrentUser = name === currentUser;
+      const content = `
+      <div class="text ${isCurrentUser ? 'sent' : ''}">
+        <div class="message-content">
+          <strong>${isCurrentUser ? 'คุณ' : name}:</strong> 
+          <div class="gif-container">
+            <img src="${gifUrl}" alt="${gifTitle}" class="gif-message" />
+          </div>
+        </div>
+        <span class="muted">
+          ${new Date().toLocaleString()}
+        </span>
+      </div>
+      `;
+      messages.innerHTML += content;
+    } else {
+      // Process message to render emojis (not necessary, modern browsers render emojis automatically)
+      const isCurrentUser = name === currentUser;
+      const content = `
+      <div class="text ${isCurrentUser ? 'sent' : ''}">
+        <div class="message-content">
+          <strong>${isCurrentUser ? 'คุณ' : name}:</strong> ${msg}
+        </div>
+        <span class="muted">
+          ${new Date().toLocaleString()}
+        </span>
+      </div>
+      `;
+      messages.innerHTML += content;
+    }
+    
+    // Auto scroll to bottom
+    messages.scrollTop = messages.scrollHeight;
+  };
 
   socketio.on("message", (data) => {
     // Check if this is a system message (has entered/left the room)
     const isSystemMessage = data.message === "has entered the room" || data.message === "has left the room";
-    createMessage(data.name, data.message, isSystemMessage);
+    
+    // Check if this is a GIF message
+    const isGif = data.message && data.message.startsWith("[gif:") && data.message.endsWith("]");
+    
+    createMessage(data.name, data.message, isSystemMessage, isGif, data.gifTitle);
   });
 
   const sendMessage = () => {
@@ -66,26 +221,62 @@
     message.value = "";
   };
   
-  // Add event listener for Enter key
-  document.getElementById("message").addEventListener("keypress", function(event) {
-    if (event.key === "Enter") {
-      sendMessage();
-    }
-  });
+  // Event listeners
+  document.addEventListener("DOMContentLoaded", function() {
+    // Populate emoji picker
+    populateEmojiPicker();
+    
+    // Emoji button click
+    document.getElementById("emoji-btn").addEventListener("click", () => {
+      toggleEmojiPicker();
+    });
+    
+    // GIF button click
+    document.getElementById("gif-btn").addEventListener("click", () => {
+      toggleGifPicker();
+    });
+    
+    // GIF search input
+    document.getElementById("gif-search").addEventListener("keyup", function(event) {
+      if (event.key === "Enter" && this.value.trim() !== "") {
+        searchGifs(this.value.trim());
+      }
+    });
+    
+    // Close pickers when clicking outside
+    document.addEventListener("click", function(event) {
+      if (!event.target.closest("#emoji-picker") && !event.target.closest("#emoji-btn") &&
+          !event.target.closest("#gif-picker") && !event.target.closest("#gif-btn")) {
+        document.getElementById("emoji-picker").classList.remove("show");
+        document.getElementById("gif-picker").classList.remove("show");
+      }
+    });
+    
+    // Add event listener for Enter key in message input
+    document.getElementById("message").addEventListener("keypress", function(event) {
+      if (event.key === "Enter") {
+        sendMessage();
+      }
+    });
 
-  // Focus on message input when page loads
-  window.onload = function() {
+    // Focus on message input when page loads
     document.getElementById("message").focus();
-  };
+  });
 </script>
 
 {% for msg in messages %}
 <script type="text/javascript">
   // Check if this is a system message
   const isSystemMsg = "{{msg.message}}" === "has entered the room" || "{{msg.message}}" === "has left the room";
+  
+  // Check if this is a GIF message
+  const isGifMsg = "{{msg.message}}".startsWith("[gif:") && "{{msg.message}}".endsWith("]");
+  
   const msgName = "{{msg.name}}";
   const msgContent = "{{msg.message}}";
-  createMessage(msgName, msgContent, isSystemMsg);
+  const gifTitle = "{{msg.gifTitle|default('')}}";
+  
+  createMessage(msgName, msgContent, isSystemMsg, isGifMsg, gifTitle);
 </script>
 {% endfor %}
 {% endblock %}

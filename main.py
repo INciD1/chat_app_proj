@@ -67,6 +67,11 @@ def message(data):
         "name": session.get("name"),
         "message": data["data"]
     }
+    
+    # Check if this is a GIF message
+    if "isGif" in data and data["isGif"]:
+        content["gifTitle"] = data.get("gifTitle", "")
+    
     send(content, to=room)
     rooms[room]["messages"].append(content)
     print(f"{session.get('name')} said: {data['data']}")

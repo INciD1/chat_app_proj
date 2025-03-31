@@ -188,6 +188,147 @@ button:active {
   background-color: var(--light);
   border-top: 1px solid #eaeaea;
   gap: 10px;
+  align-items: center;
+  position: relative;
+}
+
+.message-tools {
+  display: flex;
+  gap: 5px;
+  position: relative;
+}
+
+.tool-btn {
+  background-color: transparent;
+  color: var(--dark);
+  padding: 8px;
+  font-size: 18px;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tool-btn:hover {
+  background-color: #e9ecef;
+  transform: translateY(0);
+}
+
+/* Emoji Picker */
+.emoji-picker {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  gap: 5px;
+  z-index: 100;
+  max-width: 320px;
+  width: 320px;
+  max-height: 200px;
+  overflow-y: auto;
+  display: none;
+}
+
+.emoji-picker.show {
+  display: grid;
+}
+
+.emoji {
+  font-size: 20px;
+  cursor: pointer;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+  transition: background-color 0.2s;
+}
+
+.emoji:hover {
+  background-color: #f0f2f5;
+}
+
+/* GIF Picker */
+.gif-picker {
+  position: absolute;
+  bottom: 50px;
+  left: 0;
+  background-color: white;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+  padding: 15px;
+  z-index: 100;
+  width: 320px;
+  max-height: 350px;
+  display: none;
+  flex-direction: column;
+}
+
+.gif-picker.show {
+  display: flex;
+}
+
+.gif-search {
+  margin-bottom: 10px;
+}
+
+.gif-search input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.gif-results {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 260px;
+}
+
+.gif-item {
+  cursor: pointer;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: transform 0.2s;
+}
+
+.gif-item:hover {
+  transform: scale(1.05);
+}
+
+.gif-item img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.gif-loading, .gif-no-results, .gif-error {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 20px;
+  color: #6c757d;
+}
+
+/* GIF ในข้อความ */
+.gif-container {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  max-width: 250px;
+}
+
+.gif-message {
+  width: 100%;
+  height: auto;
+  border-radius: 8px;
+  max-height: 200px;
 }
 
 #message {
