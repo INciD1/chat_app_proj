@@ -1,303 +1,391 @@
-/* ตัวแปรสีหลัก */
+/* Global Styles & Variables */
 :root {
-  --primary: #4361ee;
-  --secondary: #3f37c9;
-  --light: #f8f9fa;
-  --dark: #212529;
-  --success: #4cc9f0;
-  --message-bg: rgba(67, 97, 238, 0.05);
-  --message-sent: rgba(76, 201, 240, 0.1);
+  --primary-color: #4f46e5;
+  --primary-hover: #4338ca;
+  --secondary-color: #ec4899;
+  --light-bg: #f3f4f6;
+  --dark-bg: #1f2937;
+  --text-color: #374151;
+  --text-muted: #6b7280;
   --border-radius: 12px;
-  --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --transition: all 0.3s ease;
+  --font-main: 'Kanit', 'Prompt', sans-serif;
 }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: #f0f2f5;
+  font-family: var(--font-main);
+  background: linear-gradient(135deg, #d8b4fe 0%, #818cf8 100%);
+  color: var(--text-color);
   margin: 0;
   padding: 0;
-  color: var(--dark);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .content {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
+  width: 100%;
+  max-width: 900px;
   padding: 20px;
 }
 
-/* หน้า Home */
+/* Login / Join Room Form */
 .buttons {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 20px;
-  background-color: white;
+  background-color: #ffffff;
   padding: 30px;
   border-radius: var(--border-radius);
-  box-shadow: var(--box-shadow);
-  width: 100%;
-  max-width: 450px;
+  box-shadow: var(--shadow);
+  max-width: 500px;
+  margin: 0 auto;
+  animation: fadeIn 0.5s ease;
 }
 
 .buttons h3 {
+  color: var(--primary-color);
   margin-top: 0;
-  color: var(--primary);
   font-size: 24px;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.buttons h3 i {
+  margin-right: 10px;
+  color: var(--secondary-color);
 }
 
 .input-group {
-  width: 100%;
-  margin-bottom: 5px;
+  margin-bottom: 20px;
 }
 
 .input-group label {
   display: block;
   margin-bottom: 8px;
   font-weight: 500;
+  color: var(--text-color);
+}
+
+.input-group label i {
+  margin-right: 6px;
+  color: var(--primary-color);
 }
 
 .input-group input {
   width: 100%;
   padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius);
   font-size: 16px;
+  transition: var(--transition);
   box-sizing: border-box;
-  transition: border-color 0.3s;
+  font-family: var(--font-main);
 }
 
 .input-group input:focus {
-  border-color: var(--primary);
   outline: none;
-  box-shadow: 0 0 0 2px rgba(67, 97, 238, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
 .join {
   display: flex;
-  flex-direction: column;
-  width: 100%;
   gap: 10px;
-}
-
-@media (min-width: 576px) {
-  .join {
-    flex-direction: row;
-  }
-  
-  .join input {
-    flex: 1;
-  }
+  margin-bottom: 20px;
+  align-items: flex-end;
 }
 
 button {
-  background-color: var(--primary);
+  background-color: var(--primary-color);
   color: white;
   border: none;
   padding: 12px 20px;
-  border-radius: 6px;
+  border-radius: var(--border-radius);
   cursor: pointer;
-  font-size: 16px;
   font-weight: 500;
-  transition: background-color 0.3s, transform 0.2s;
+  font-size: 16px;
+  transition: var(--transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-main);
 }
 
 button:hover {
-  background-color: var(--secondary);
+  background-color: var(--primary-hover);
   transform: translateY(-2px);
 }
 
-button:active {
-  transform: translateY(0);
+button i {
+  margin-right: 8px;
 }
 
 .create-btn {
+  background-color: var(--secondary-color);
   width: 100%;
-  background-color: var(--success);
+  margin-top: 10px;
 }
 
 .create-btn:hover {
-  background-color: #3da8cc;
+  background-color: #db2777;
 }
 
 .error-message {
-  color: #e63946;
-  background-color: rgba(230, 57, 70, 0.1);
-  padding: 10px;
-  border-radius: 6px;
-  font-size: 14px;
-  width: 100%;
-  list-style-type: none;
+  background-color: #fee2e2;
+  color: #b91c1c;
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  margin-top: 20px;
+  list-style: none;
 }
 
 .error-message li {
-  margin: 0;
+  display: flex;
+  align-items: center;
 }
 
-/* หน้า Chat Room */
+.error-message i {
+  margin-right: 8px;
+}
+
+/* Chat Room Styles */
 .message-box {
-  border: none;
-  border-radius: var(--border-radius);
   background-color: white;
-  height: 85vh;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  height: 80vh;
   display: flex;
   flex-direction: column;
-  width: 90vw;
-  max-width: 1000px;
-  align-items: stretch;
-  box-shadow: var(--box-shadow);
-  overflow: hidden;
+  animation: slideIn 0.5s ease;
 }
 
 .room-header {
-  background-color: var(--primary);
-  color: white;
-  padding: 15px 20px;
-  text-align: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   position: relative;
 }
 
 .room-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 20px;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+}
+
+.room-header h2 i {
+  margin-right: 10px;
+  color: var(--secondary-color);
 }
 
 .room-code {
-  background-color: rgba(255, 255, 255, 0.2);
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-size: 0.9rem;
+  background-color: var(--light-bg);
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 16px;
   margin-left: 10px;
+  color: var(--text-muted);
 }
 
 .messages {
-  overflow-y: auto;
   flex: 1;
-  width: 100%;
   padding: 20px;
+  overflow-y: auto;
   display: flex;
   flex-direction: column;
   gap: 10px;
+  background-color: #f9fafb;
+}
+
+.text {
+  padding: 12px 16px;
+  border-radius: var(--border-radius);
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  max-width: 75%;
+  position: relative;
+  align-self: flex-start;
+  animation: fadeIn 0.3s ease;
+  border-top-left-radius: 4px;
+}
+
+.text.sent {
+  background-color: var(--primary-color);
+  color: white;
+  align-self: flex-end;
+  border-top-right-radius: 4px;
+  border-top-left-radius: var(--border-radius);
+}
+
+.text.sent .message-content strong {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.message-content {
+  margin-bottom: 4px;
+  word-wrap: break-word;
+}
+
+.message-content strong {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+.text.sent .muted {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.muted {
+  font-size: 12px;
+  color: var(--text-muted);
+  display: block;
+  text-align: right;
+}
+
+.system-message {
+  text-align: center;
+  padding: 8px 12px;
+  background-color: rgba(79, 70, 229, 0.1);
+  border-radius: 20px;
+  color: var(--primary-color);
+  font-size: 14px;
+  max-width: 80%;
+  margin: 10px auto;
+  animation: fadeIn 0.3s ease;
 }
 
 .inputs {
-  padding: 15px;
+  padding: 15px 20px;
+  background-color: white;
+  border-top: 1px solid #e5e7eb;
   display: flex;
-  background-color: var(--light);
-  border-top: 1px solid #eaeaea;
-  gap: 10px;
-  align-items: center;
   position: relative;
 }
 
 .message-tools {
   display: flex;
-  gap: 5px;
   position: relative;
 }
 
 .tool-btn {
-  background-color: transparent;
-  color: var(--dark);
-  padding: 8px;
-  font-size: 18px;
-  border-radius: 50%;
+  background-color: var(--light-bg);
+  color: var(--text-color);
   width: 40px;
   height: 40px;
+  border-radius: 50%;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.tool-btn:hover {
+  background-color: #e5e7eb;
+  transform: translateY(0);
+}
+
+#message {
+  flex: 1;
+  padding: 12px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
+  font-size: 16px;
+  margin-right: 10px;
+  font-family: var(--font-main);
+}
+
+#message:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
+}
+
+#send-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.tool-btn:hover {
-  background-color: #e9ecef;
-  transform: translateY(0);
+#send-btn i {
+  margin: 0;
+  font-size: 18px;
 }
 
 /* Emoji Picker */
-.emoji-picker {
+.emoji-picker, .gif-picker {
   position: absolute;
-  bottom: 50px;
+  bottom: 60px;
   left: 0;
   background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-  padding: 10px;
-  display: grid;
-  grid-template-columns: repeat(10, 1fr);
-  gap: 5px;
-  z-index: 100;
-  max-width: 320px;
-  width: 320px;
-  max-height: 200px;
-  overflow-y: auto;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 15px;
   display: none;
+  max-width: 320px;
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 10;
+  flex-wrap: wrap;
+  gap: 8px;
 }
 
-.emoji-picker.show {
-  display: grid;
+.emoji-picker.show, .gif-picker.show {
+  display: flex;
+  animation: fadeIn 0.3s ease;
 }
 
 .emoji {
-  font-size: 20px;
+  font-size: 24px;
   cursor: pointer;
-  text-align: center;
+  user-select: none;
+  transition: var(--transition);
   padding: 5px;
   border-radius: 6px;
-  transition: background-color 0.2s;
 }
 
 .emoji:hover {
-  background-color: #f0f2f5;
+  background-color: var(--light-bg);
+  transform: scale(1.2);
 }
 
 /* GIF Picker */
 .gif-picker {
-  position: absolute;
-  bottom: 50px;
-  left: 0;
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-  padding: 15px;
-  z-index: 100;
   width: 320px;
-  max-height: 350px;
-  display: none;
   flex-direction: column;
-}
-
-.gif-picker.show {
-  display: flex;
+  gap: 10px;
 }
 
 .gif-search {
+  width: 100%;
   margin-bottom: 10px;
 }
 
 .gif-search input {
   width: 100%;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 24px;
   font-size: 14px;
+  font-family: var(--font-main);
 }
 
 .gif-results {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 10px;
-  overflow-y: auto;
-  max-height: 260px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: space-between;
 }
 
 .gif-item {
   cursor: pointer;
   border-radius: 8px;
   overflow: hidden;
-  transition: transform 0.2s;
+  transition: var(--transition);
 }
 
 .gif-item:hover {
@@ -311,189 +399,52 @@ button:active {
 }
 
 .gif-loading, .gif-no-results, .gif-error {
-  grid-column: 1 / -1;
   text-align: center;
   padding: 20px;
-  color: #6c757d;
+  color: var(--text-muted);
+  font-size: 14px;
+  width: 100%;
 }
 
-/* GIF ในข้อความ */
 .gif-container {
-  margin-top: 5px;
-  margin-bottom: 5px;
-  max-width: 250px;
+  margin-top: 8px;
+  border-radius: 8px;
+  overflow: hidden;
+  max-width: 100%;
 }
 
 .gif-message {
-  width: 100%;
+  max-width: 100%;
   height: auto;
-  border-radius: 8px;
-  max-height: 200px;
-}
-
-#message {
-  flex: 1;
-  padding: 12px 15px;
-  border: 1px solid #ddd;
-  border-radius: 20px;
-  font-size: 16px;
-  transition: border-color 0.3s;
-}
-
-#message:focus {
-  border-color: var(--primary);
-  outline: none;
-}
-
-#send-btn {
-  padding: 10px 20px;
-  border-radius: 20px;
-}
-
-/* ปุ่มเปลี่ยนชื่อในส่วนหัวห้องแชท */
-.change-name-btn {
-  position: absolute;
-  right: 20px;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: rgba(255, 255, 255, 0.2);
-  color: white;
-  padding: 6px 12px;
-  border-radius: 20px;
-  font-size: 14px;
-}
-
-.change-name-btn:hover {
-  background-color: rgba(255, 255, 255, 0.3);
-}
-
-/* โมดัลสำหรับเปลี่ยนชื่อ */
-.change-name-modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.5);
-  justify-content: center;
-  align-items: center;
-}
-
-.change-name-content {
-  background-color: white;
-  padding: 25px;
-  border-radius: var(--border-radius);
-  max-width: 400px;
-  width: 90%;
-  box-shadow: var(--box-shadow);
-}
-
-.change-name-content h3 {
-  margin-top: 0;
-  color: var(--primary);
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.change-name-buttons {
-  display: flex;
-  justify-content: flex-end;
-  gap: 10px;
-  margin-top: 20px;
-}
-
-.cancel-btn {
-  background-color: #6c757d;
-}
-
-.cancel-btn:hover {
-  background-color: #5a6268;
-}
-
-.confirm-btn {
-  background-color: var(--success);
-}
-
-.confirm-btn:hover {
-  background-color: #3da8cc;
-}
-
-/* ข้อความแชททั่วไป */
-.text {
-  padding: 12px 16px;
-  border-radius: 12px;
-  margin-bottom: 10px;
-  max-width: 80%;
-  background-color: #f0f2f5;
-  align-self: flex-start; /* ยึดติดกับด้านซ้ายเสมอ */
-  word-break: break-word;
-  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
-  position: relative;
-}
-
-/* ข้อความที่ส่งโดยผู้ใช้ปัจจุบัน (ซึ่งจะอยู่ด้านซ้ายเหมือนกัน แต่มีสีต่างกัน) */
-.text.sent {
-  background-color: var(--primary);
-  color: white;
-  align-self: flex-start; /* เปลี่ยนจาก flex-end เป็น flex-start เพื่อให้อยู่ซ้ายเหมือนกัน */
-  /* ให้ความแตกต่างเป็นแค่สีพื้นหลังและสีตัวอักษร */
-}
-
-/* ชื่อผู้ส่งในข้อความทั่วไป */
-.text strong {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-/* ชื่อผู้ส่งในข้อความที่ส่งเอง */
-.text.sent strong {
-  color: white;
-}
-
-
-/* เวลาส่งข้อความทั่วไป */
-.muted {
-  font-size: 12px;
-  color: #6c757d;
-  margin-top: 5px;
   display: block;
+  border-radius: 8px;
 }
 
-/* เวลาส่งข้อความที่ส่งเอง */
-.text.sent .muted {
-  color: rgba(255, 255, 255, 0.8);
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-/* ข้อความแจ้งเตือนระบบ */
-.system-message {
-  text-align: center;
-  padding: 8px 12px;
-  margin: 5px 0;
-  background-color: rgba(0,0,0,0.05);
-  border-radius: 20px;
-  font-size: 14px;
-  color: #6c757d;
-  font-style: italic;
-  width: fit-content;
-  align-self: center;
+@keyframes slideIn {
+  from { transform: translateY(20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
-/* Custom scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
+/* Media Queries */
+@media (max-width: 768px) {
+  .content {
+    padding: 15px;
+  }
+  
+  .message-box {
+    height: 90vh;
+  }
+  
+  .text {
+    max-width: 85%;
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 10px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
+/* แอด font สำหรับภาษาไทย */
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;600&family=Prompt:wght@300;400;500;600&display=swap');
