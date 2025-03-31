@@ -345,16 +345,22 @@ button i {
   box-shadow: var(--shadow);
   padding: 15px;
   display: none;
-  max-width: 320px;
+  width: 320px;
   max-height: 250px;
   overflow-y: auto;
   z-index: 10;
-  flex-wrap: wrap;
   gap: 8px;
 }
 
-.emoji-picker.show, .gif-picker.show {
-  display: flex;
+.emoji-picker.show {
+  display: grid !important;
+  grid-template-columns: repeat(6, 1fr);
+  animation: fadeIn 0.3s ease;
+}
+
+.gif-picker.show {
+  display: flex !important;
+  flex-direction: column;
   animation: fadeIn 0.3s ease;
 }
 
@@ -365,6 +371,9 @@ button i {
   transition: var(--transition);
   padding: 5px;
   border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .emoji:hover {
@@ -394,10 +403,9 @@ button i {
 }
 
 .gif-results {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 8px;
-  justify-content: space-between;
 }
 
 .gif-item {
@@ -405,6 +413,7 @@ button i {
   border-radius: 8px;
   overflow: hidden;
   transition: var(--transition);
+  aspect-ratio: 16/9;
 }
 
 .gif-item:hover {
@@ -413,32 +422,25 @@ button i {
 
 .gif-item img {
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   display: block;
 }
 
-.gif-loading, .gif-no-results, .gif-error {
-  text-align: center;
-  padding: 20px;
-  color: var(--text-muted);
-  font-size: 14px;
-  width: 100%;
+/* Media Queries for responsive design */
+@media (max-width: 480px) {
+  .emoji-picker, .gif-picker {
+    width: 280px;
+  }
+  
+  .emoji-picker.show {
+    grid-template-columns: repeat(5, 1fr);
+  }
+  
+  .gif-results {
+    grid-template-columns: 1fr;
+  }
 }
-
-.gif-container {
-  margin-top: 8px;
-  border-radius: 8px;
-  overflow: hidden;
-  max-width: 100%;
-}
-
-.gif-message {
-  max-width: 100%;
-  height: auto;
-  display: block;
-  border-radius: 8px;
-}
-
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
