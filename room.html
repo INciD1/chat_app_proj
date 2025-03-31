@@ -1,0 +1,91 @@
+{% extends 'base.html' %} {% block content %}
+<div class="message-box">
+  <div class="room-header">
+    <h2><i class="fas fa-comments"></i> ห้องแชท <span class="room-code">{{code}}</span></h2>
+  </div>
+  <div class="messages" id="messages"></div>
+  <div class="inputs">
+    <input
+      type="text"
+      placeholder="พิมพ์ข้อความของคุณที่นี่..."
+      name="message"
+      id="message"
+      autocomplete="off"
+    />
+    <button type="button" id="send-btn" onclick="sendMessage()">
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </div>
+</div>
+
+<script type="text/javascript">
+  var socketio = io({
+    transports: ['polling', 'websocket']
+  });
+
+  const messages = document.getElementById("messages");
+  const currentUser = "{{ session.get('name') }}";
+
+  const createMessage = (name, msg, isSystem = false) => {
+  if (isSystem) {
+    const content = `
+    <div class="system-message">
+      <span>${name} ${msg}</span>
+    </div>
+    `;
+    messages.innerHTML += content;
+  } else {
+    const isCurrentUser = name === currentUser;
+    const content = `
+    <div class="text ${isCurrentUser ? 'sent' : ''}">
+      <div class="message-content">
+        <strong>${isCurrentUser ? 'คุณ' : name}:</strong> ${msg}
+      </div>
+      <span class="muted">
+        ${new Date().toLocaleString()}
+      </span>
+    </div>
+    `;
+    messages.innerHTML += content;
+  }
+  
+  // Auto scroll to bottom
+  messages.scrollTop = messages.scrollHeight;
+};
+
+  socketio.on("message", (data) => {
+    // Check if this is a system message (has entered/left the room)
+    const isSystemMessage = data.message === "has entered the room" || data.message === "has left the room";
+    createMessage(data.name, data.message, isSystemMessage);
+  });
+
+  const sendMessage = () => {
+    const message = document.getElementById("message");
+    if (message.value == "") return;
+    socketio.emit("message", { data: message.value });
+    message.value = "";
+  };
+  
+  // Add event listener for Enter key
+  document.getElementById("message").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") {
+      sendMessage();
+    }
+  });
+
+  // Focus on message input when page loads
+  window.onload = function() {
+    document.getElementById("message").focus();
+  };
+</script>
+
+{% for msg in messages %}
+<script type="text/javascript">
+  // Check if this is a system message
+  const isSystemMsg = "{{msg.message}}" === "has entered the room" || "{{msg.message}}" === "has left the room";
+  const msgName = "{{msg.name}}";
+  const msgContent = "{{msg.message}}";
+  createMessage(msgName, msgContent, isSystemMsg);
+</script>
+{% endfor %}
+{% endblock %}
