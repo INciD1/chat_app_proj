@@ -27,29 +27,31 @@
   const currentUser = "{{ session.get('name') }}";
 
   const createMessage = (name, msg, isSystem = false) => {
-    if (isSystem) {
-      const content = `
-      <div class="system-message">
-        <span>${name} ${msg}</span>
+  if (isSystem) {
+    const content = `
+    <div class="system-message">
+      <span>${name} ${msg}</span>
+    </div>
+    `;
+    messages.innerHTML += content;
+  } else {
+    const isCurrentUser = name === currentUser;
+    const content = `
+    <div class="text ${isCurrentUser ? 'sent' : ''}">
+      <div class="message-content">
+        <strong>${isCurrentUser ? 'คุณ' : name}:</strong> ${msg}
       </div>
-      `;
-      messages.innerHTML += content;
-    } else {
-      const isCurrentUser = name === currentUser;
-      const content = `
-      <div class="text ${isCurrentUser ? 'sent' : ''}">
-        <strong>${name}:</strong> ${msg}
-        <span class="muted">
-          ${new Date().toLocaleString()}
-        </span>
-      </div>
-      `;
-      messages.innerHTML += content;
-    }
-    
-    // Auto scroll to bottom
-    messages.scrollTop = messages.scrollHeight;
-  };
+      <span class="muted">
+        ${new Date().toLocaleString()}
+      </span>
+    </div>
+    `;
+    messages.innerHTML += content;
+  }
+  
+  // Auto scroll to bottom
+  messages.scrollTop = messages.scrollHeight;
+};
 
   socketio.on("message", (data) => {
     // Check if this is a system message (has entered/left the room)
@@ -81,7 +83,9 @@
 <script type="text/javascript">
   // Check if this is a system message
   const isSystemMsg = "{{msg.message}}" === "has entered the room" || "{{msg.message}}" === "has left the room";
-  createMessage("{{msg.name}}", "{{msg.message}}", isSystemMsg);
+  const msgName = "{{msg.name}}";
+  const msgContent = "{{msg.message}}";
+  createMessage(msgName, msgContent, isSystemMsg);
 </script>
 {% endfor %}
 {% endblock %}
