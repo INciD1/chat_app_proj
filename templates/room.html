@@ -111,20 +111,21 @@
     }
   };
 
-  // Search for GIFs
+  window.GIPHY_API_KEY = "sJghslgtT6djr7bYTPtF4jiz2PwhdYsm";; 
+// Search for GIFs
   const searchGifs = (query) => {
     const resultsDiv = document.getElementById("gif-results");
     resultsDiv.innerHTML = '<div class="gif-loading">กำลังค้นหา...</div>';
-    
-    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${sJghslgtT6djr7bYTPtF4jiz2PwhdYsm}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
+  
+    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${window.GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
       .then(response => response.json())
-      .then(data => {
-        resultsDiv.innerHTML = '';
+        .then(data => {
+          resultsDiv.innerHTML = '';
         
-        if (data.data.length === 0) {
-          resultsDiv.innerHTML = '<div class="gif-no-results">ไม่พบ GIF ที่ตรงกับการค้นหา</div>';
-          return;
-        }
+          if (data.data.length === 0) {
+            resultsDiv.innerHTML = '<div class="gif-no-results">ไม่พบ GIF ที่ตรงกับการค้นหา</div>';
+            return;
+          }
         
         data.data.forEach(gif => {
           const gifItem = document.createElement("div");
