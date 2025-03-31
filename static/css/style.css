@@ -48,10 +48,13 @@ body {
   font-size: 24px;
   text-align: center;
   margin-bottom: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
 }
 
 .buttons h3 i {
-  margin-right: 10px;
   color: var(--secondary-color);
 }
 
@@ -64,6 +67,8 @@ body {
   margin-bottom: 8px;
   font-weight: 500;
   color: var(--text-color);
+  display: flex;
+  align-items: center;
 }
 
 .input-group label i {
@@ -80,6 +85,7 @@ body {
   transition: var(--transition);
   box-sizing: border-box;
   font-family: var(--font-main);
+  height: 48px;
 }
 
 .input-group input:focus {
@@ -88,18 +94,31 @@ body {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
+/* แก้ไขส่วนของการจัดเรียงฟอร์มเข้าห้อง */
 .join {
   display: flex;
-  gap: 10px;
   margin-bottom: 20px;
-  align-items: flex-end;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.join .input-group {
+  flex: 1;
+  margin-bottom: 0;
+}
+
+.join button {
+  height: 48px;
+  min-width: 120px;
+  padding: 0 15px;
+  margin-top: 32px; /* ปรับให้อยู่ระดับเดียวกับช่อง input */
+  white-space: nowrap;
 }
 
 button {
   background-color: var(--primary-color);
   color: white;
   border: none;
-  padding: 12px 20px;
   border-radius: var(--border-radius);
   cursor: pointer;
   font-weight: 500;
@@ -109,6 +128,7 @@ button {
   align-items: center;
   justify-content: center;
   font-family: var(--font-main);
+  height: 48px;
 }
 
 button:hover {
@@ -443,6 +463,16 @@ button i {
   
   .text {
     max-width: 85%;
+  }
+  
+  .join {
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .join button {
+    margin-top: 0;
+    width: 100%;
   }
 }
 
