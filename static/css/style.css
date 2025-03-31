@@ -94,7 +94,6 @@ body {
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.2);
 }
 
-/* แก้ไขส่วนของการจัดเรียงฟอร์มเข้าห้อง */
 .join {
   display: flex;
   margin-bottom: 20px;
@@ -111,7 +110,7 @@ body {
   height: 48px;
   min-width: 120px;
   padding: 0 15px;
-  margin-top: 32px; /* ปรับให้อยู่ระดับเดียวกับช่อง input */
+  margin-top: 30px; /* ปรับให้อยู่ระดับเดียวกับช่อง input */
   white-space: nowrap;
 }
 
