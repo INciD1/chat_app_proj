@@ -78,7 +78,12 @@ def change_name():
     send(system_message, to=room)
     rooms[room]["messages"].append(system_message)
     
-    return redirect(url_for("room"))
+    # ตรวจสอบว่าเป็น AJAX request หรือไม่
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return {'success': True}
+    else:
+        # ถ้าไม่ใช่ AJAX request ให้ redirect ตามปกติ
+        return redirect(url_for("room"))
 
 @socketio.on("message")
 def message(data):

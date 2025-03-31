@@ -280,27 +280,42 @@
       }
     });
 
-    // เพิ่ม event listener สำหรับปุ่มเปลี่ยนชื่อ
-    document.getElementById("change-name-btn").addEventListener("click", function() {
-      document.getElementById("change-name-modal").style.display = "flex";
-    });
-
-    // ปุ่มยกเลิกการเปลี่ยนชื่อ
-    document.getElementById("cancel-change-name").addEventListener("click", function() {
-      document.getElementById("change-name-modal").style.display = "none";
-    });
-
-    // ปิดฟอร์มเมื่อคลิกนอกกรอบ
-    window.addEventListener("click", function(event) {
-      const modal = document.getElementById("change-name-modal");
-      if (event.target == modal) {
-        modal.style.display = "none";
-      }
-    });
-
-    // Focus on message input when page loads
-    document.getElementById("message").focus();
+  // เปลี่ยนวิธีการทำงานของฟอร์มเปลี่ยนชื่อ
+  const changeNameForm = document.querySelector("#change-name-modal form");
+  changeNameForm.addEventListener("submit", function(event) {
+    event.preventDefault(); // ป้องกันการส่งฟอร์มตามปกติ
+    
+    const newName = document.getElementById("new_name").value.trim();
+    const oldName = currentUser;
+    
+    if (newName) {
+      // ใช้ Fetch API เพื่อส่งการเปลี่ยนชื่อ
+      fetch('/change_name', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'X-Requested-With': 'XMLHttpRequest'
+        },
+        body: `new_name=${encodeURIComponent(newName)}`
+      })
+      .then(response => {
+        if (response.ok) {
+          // ซ่อน modal
+          document.getElementById("change-name-modal").style.display = "none";
+          
+          // อัปเดตชื่อผู้ใช้ในตัวแปรที่ใช้ในหน้า
+          window.currentUser = newName;
+          
+          // สร้างข้อความระบบเพื่อแสดงการเปลี่ยนชื่อ (ทำซ้ำกับฝั่ง server แต่ช่วยให้ UI อัปเดตเร็วขึ้น)
+          createMessage("ระบบ", `${oldName} เปลี่ยนชื่อเป็น ${newName}`, true);
+        } else {
+          console.error("Error changing name");
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
   });
+});
 </script>
 
 {% for msg in messages %}
