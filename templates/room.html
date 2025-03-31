@@ -116,7 +116,7 @@
     const resultsDiv = document.getElementById("gif-results");
     resultsDiv.innerHTML = '<div class="gif-loading">กำลังค้นหา...</div>';
     
-    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
+    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${sJghslgtT6djr7bYTPtF4jiz2PwhdYsm}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
       .then(response => response.json())
       .then(data => {
         resultsDiv.innerHTML = '';
