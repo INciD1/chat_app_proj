@@ -464,11 +464,6 @@ button i {
   color: #8a2be2; /* สีม่วงสำหรับ Yappalogy */
 }
 
-.content {
-  margin-top: 60px; /* ให้พื้นที่สำหรับ header */
-  padding: 20px;
-}
-
 @keyframes slideIn {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
