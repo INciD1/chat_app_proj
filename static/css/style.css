@@ -443,18 +443,21 @@ button i {
 }
 .app-header {
   text-align: center;
-  padding: 15px 0;
-  position: fixed;
-  top: 1;
-  width: 100%;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
 }
 
 .app-title {
+  font-size: 28px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   margin: 0;
-  font-size: 24px;
-  color: #8a2be2; /* สีม่วงสำหรับ Yappalogy */
+  padding: 10px 0;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease;
+}
+.content {
+  margin-top: 50px; /* ให้พื้นที่สำหรับ header */
+  padding: 20px;
 }
 
 /* Animations */
