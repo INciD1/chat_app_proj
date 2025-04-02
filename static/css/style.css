@@ -441,6 +441,21 @@ button i {
     grid-template-columns: 1fr;
   }
 }
+/* App Header Styles */
+.app-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.app-title {
+  font-size: 28px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0;
+  padding: 10px 0;
+  font-weight: 600;
+  animation: fadeIn 0.5s ease;
+}
 /* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }

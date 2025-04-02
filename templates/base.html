@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Real-Time Chat App</title>
+    <title>Yappalogy - Real-Time Chat App</title>
     <link
       rel="stylesheet"
       href="{{url_for('static', filename='css/style.css')}}"
@@ -16,6 +16,9 @@
     ></script>
   </head>
   <body>
+    <header class="app-header">
+      <h1 class="app-title">*Yappalogy*</h1>
+    </header>
     <div class="content">{% block content %} {% endblock %}</div>
   </body>
 </html>
