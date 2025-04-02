@@ -444,6 +444,11 @@ button i {
 .app-header {
   text-align: center;
   margin-bottom: 20px;
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
 }
 
 .app-title {
