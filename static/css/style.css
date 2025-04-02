@@ -441,18 +441,11 @@ button i {
     grid-template-columns: 1fr;
   }
 }
-/* Animations */
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
 .app-header {
   text-align: center;
   padding: 15px 0;
-  background-color: rgba(255, 255, 255, 0.9);
   position: fixed;
-  top: 0;
+  top: 10;
   width: 100%;
   z-index: 1000;
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
@@ -462,6 +455,17 @@ button i {
   margin: 0;
   font-size: 24px;
   color: #8a2be2; /* สีม่วงสำหรับ Yappalogy */
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes fadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 @keyframes slideIn {
