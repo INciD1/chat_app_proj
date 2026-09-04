@@ -10,6 +10,8 @@ services:
     envVars:
       - key: SECRET_KEY
         generateValue: true
+      - key: GIPHY_API_KEY
+        sync: false
       - key: PYTHON_VERSION
         value: 3.9.16
     plan: free

@@ -1,12 +1,18 @@
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from flask_socketio import join_room, leave_room, send, SocketIO
 import random
 from string import ascii_uppercase
 import os
+import requests
+from dotenv import load_dotenv
+
+load_dotenv()  # loads variables from a local .env file, if present (no-op on Render)
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "thisisasecretkey")
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='gevent')
+
+GIPHY_API_KEY = os.environ.get("GIPHY_API_KEY")
 
 rooms = {}
 
@@ -56,6 +62,50 @@ def room():
         return redirect(url_for("home"))
 
     return render_template("room.html", code=room, messages=rooms[room]["messages"])
+
+
+@app.route("/api/gif-search")
+def gif_search():
+    """Proxies GIF search requests to Giphy so the API key stays server-side
+    and never gets shipped to the browser."""
+    if session.get("room") is None or session.get("name") is None:
+        return jsonify({"error": "unauthorized"}), 401
+
+    if not GIPHY_API_KEY:
+        return jsonify({"error": "GIPHY_API_KEY is not configured on the server"}), 503
+
+    query = request.args.get("q", "").strip()
+    if not query:
+        return jsonify({"data": []})
+
+    try:
+        response = requests.get(
+            "https://api.giphy.com/v1/gifs/search",
+            params={
+                "api_key": GIPHY_API_KEY,
+                "q": query,
+                "limit": 15,
+                "rating": "g",
+            },
+            timeout=5,
+        )
+        response.raise_for_status()
+    except requests.RequestException as e:
+        print(f"Giphy request failed: {e}")
+        return jsonify({"error": "giphy request failed"}), 502
+
+    data = response.json()
+    # Only pass through the fields the frontend actually uses, to keep the
+    # response small and avoid leaking anything unexpected from Giphy.
+    slim_results = [
+        {
+            "title": gif.get("title", ""),
+            "preview_url": gif.get("images", {}).get("fixed_height_small", {}).get("url", ""),
+            "full_url": gif.get("images", {}).get("fixed_height", {}).get("url", ""),
+        }
+        for gif in data.get("data", [])
+    ]
+    return jsonify({"data": slim_results})
 
 
 @socketio.on("message")

@@ -40,7 +40,6 @@
 
   const messages = document.getElementById("messages");
   const currentUser = "{{ session.get('name') }}";
-  const GIPHY_API_KEY = "sJghslgtT6djr7bYTPtF4jiz2PwhdYsm";
 
   // Common emojis array
   const commonEmojis = [
@@ -151,16 +150,21 @@
     }
   };
 
-  window.GIPHY_API_KEY = "sJghslgtT6djr7bYTPtF4jiz2PwhdYsm";; 
-// Search for GIFs
+  // Search for GIFs (proxied through our own backend, so no API key is
+  // ever exposed to the browser)
   const searchGifs = (query) => {
     const resultsDiv = document.getElementById("gif-results");
     resultsDiv.innerHTML = '<div class="gif-loading">กำลังค้นหา...</div>';
   
-    fetch(`https://api.giphy.com/v1/gifs/search?api_key=${window.GIPHY_API_KEY}&q=${encodeURIComponent(query)}&limit=15&rating=g`)
+    fetch(`/api/gif-search?q=${encodeURIComponent(query)}`)
       .then(response => response.json())
         .then(data => {
           resultsDiv.innerHTML = '';
+
+          if (data.error) {
+            resultsDiv.innerHTML = '<div class="gif-error">เกิดข้อผิดพลาดในการค้นหา GIF</div>';
+            return;
+          }
         
           if (data.data.length === 0) {
             resultsDiv.innerHTML = '<div class="gif-no-results">ไม่พบ GIF ที่ตรงกับการค้นหา</div>';
@@ -172,11 +176,11 @@
           gifItem.className = "gif-item";
           
           const img = document.createElement("img");
-          img.src = gif.images.fixed_height_small.url;
+          img.src = gif.preview_url;
           img.alt = gif.title;
           
           img.addEventListener("click", () => {
-            sendGif(gif.images.fixed_height.url, gif.title);
+            sendGif(gif.full_url, gif.title);
             toggleGifPicker(false);
           });
           
