@@ -1,67 +1,99 @@
 
 # 💬 Chat App Proj
 
-โปรเจกต์นี้เป็นแอปพลิเคชันแชทแบบเรียลไทม์ที่พัฒนาด้วย Python และ Flask โดยมีเป้าหมายเพื่อให้ผู้ใช้งานสามารถสื่อสารกับเพื่อน ๆ ได้ตั้งแต่ 2 คนขึ้นไป ผ่านอินเทอร์เฟซที่ใช้งานง่ายและสะดวกสบาย
+A real-time chat application built with Python, Flask, and Flask-SocketIO. Users can create a new chat room or join an existing one with a room code, then chat live over WebSocket.
 
+## 🚀 Features
 
-## 🚀 ฟีเจอร์หลัก
+- Create a new room (random 4-character room code) or join an existing one by code
+- Real-time messaging over WebSocket (Flask-SocketIO)
+- Join/leave notifications in the room
+- Built-in emoji picker
+- GIF search and sending via the Giphy API (proxied through our own backend endpoint, never called directly from the browser)
+- Multiple rooms supported concurrently, with per-room user state tracked via session
 
-- รองรับการแชทแบบกลุ่มและส่วนตัว
-- อินเทอร์เฟซที่เรียบง่ายและใช้งานง่าย
-- พัฒนาอย่างต่อเนื่องเพื่อเพิ่มฟีเจอร์ใหม่ ๆ ในอนาคต
+## 🛠️ Tech Stack
 
-## 🛠️ เทคโนโลยีที่ใช้
+- Python 3.9
+- Flask, Flask-SocketIO
+- gevent / gevent-websocket (for WebSocket support in deployment)
+- HTML, CSS, JavaScript
+- Giphy API (for the GIF feature — called through a backend proxy)
+- Deployed on [Render](https://render.com) (see `render.yaml`)
 
-- Python
-- Flask
-- HTML
-- CSS
-
-## 📁 โครงสร้างโปรเจกต์
+## 📁 Project Structure
 
 ```
 chat_app_proj/
 ├── static/
 │   └── css/
-|      └── style.css
+│       └── style.css
 ├── templates/
-|      └── base.html
-|      └── home.html
-|      └── room.html
+│   ├── base.html
+│   ├── home.html
+│   └── room.html
 ├── main.py
 ├── requirements.txt
 ├── render.yaml
 ├── runtime.txt
+├── .env.example
 └── README.md
 ```
 
-## ⚙️ การติดตั้งและใช้งาน
+## ⚙️ Setup & Usage
 
-1. Clone โปรเจกต์จาก GitHub:
+1. Clone the repo:
    ```bash
    git clone https://github.com/INciD1/chat_app_proj.git
    cd chat_app_proj
    ```
 
-2. สร้างและเปิดใช้งาน virtual environment:
+2. Create and activate a virtual environment:
    ```bash
    python -m venv venv
-   source venv/bin/activate  # สำหรับ Unix หรือ MacOS
-   venv\Scripts\activate     # สำหรับ Windows
+   source venv/bin/activate  # Unix / macOS
+   venv\Scripts\activate     # Windows
    ```
 
-3. ติดตั้ง dependencies:
+3. Install dependencies:
    ```bash
    pip install -r requirements.txt
    ```
 
-4. รันแอปพลิเคชัน:
+4. Copy `.env.example` to `.env` and add your own Giphy API key (free at https://developers.giphy.com/):
+   ```bash
+   cp .env.example .env
+   ```
+
+5. Run the app:
    ```bash
    python main.py
    ```
 
-5. เปิดเบราว์เซอร์และไปที่ `http://localhost:5000` เพื่อเริ่มใช้งาน
+6. Open your browser at `http://localhost:5000`
 
-## 📌 หมายเหตุ
+## 🔐 Environment Variables
 
-โปรเจกต์นี้ยังอยู่ในระหว่างการพัฒนา ฟีเจอร์ใหม่ ๆ จะถูกเพิ่มเข้ามาในอนาคต หากคุณมีข้อเสนอแนะหรือพบปัญหา สามารถเปิด issue หรือ pull request ได้เลยครับ
+| Variable | Description |
+|---|---|
+| `SECRET_KEY` | Flask session secret (auto-generated on Render) |
+| `GIPHY_API_KEY` | Giphy API key — must be set both locally and on Render (no default; if unset, the GIF picker won't work but the rest of the chat still runs fine) |
+| `PORT` | Port the app runs on (defaults to 5000 locally) |
+
+> ✅ The Giphy API key now lives server-side (read from an environment variable). The frontend calls our own `/api/gif-search` endpoint instead of hitting `api.giphy.com` directly, so the key is never shipped to the browser.
+
+## 📌 Current Limitations
+
+- Rooms and messages live entirely in memory (the `rooms` dict) — a server restart wipes every room and message history
+- No real authentication (just a display name, no password)
+- Runs on a single worker (`-w 1` in `render.yaml`) since state lives in one process's memory — can't scale horizontally without moving to a shared store like Redis
+
+## 🗺️ Possible Improvements
+
+- Persist rooms/messages to a real store (Redis or PostgreSQL) instead of an in-memory dict
+- Add real user registration/login
+- Support multiple workers by moving room state to Redis (via Flask-SocketIO's message queue support)
+
+## 🙌 Contributing
+
+This project is still under active development. Issues and pull requests are welcome.
